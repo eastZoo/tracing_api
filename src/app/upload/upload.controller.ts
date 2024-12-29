@@ -10,15 +10,19 @@ import axios from 'axios';
 import * as FormData from 'form-data';
 import { v4 as uuidv4 } from 'uuid';
 import * as path from 'path';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('upload')
 export class UploadController {
+  constructor(private configService: ConfigService) {}
+
   @Post(':project')
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(@UploadedFile() file, @Param('project') project: string) {
     // 원격 파일 서버의 업로드 엔드포인트
-    const uploadUrl = `${process.env.FILE_SERVER_API}/${project}`;
+    const uploadUrl = `http://file-upload-server.components.kr/upload/${project}`;
 
+    console.log(uploadUrl);
     // 파일 확장자 추출
     const fileExtName = path.extname(file.originalname);
 
